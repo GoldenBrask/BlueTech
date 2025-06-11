@@ -16,8 +16,16 @@ namespace BlueTechAPP
         public PagePrincipaleAdmin()
         {
             InitializeComponent();
+
+            // permet d'occuper tout l'espace disponible dans le parent
+            this.Dock = DockStyle.Fill;
+            this.Resize += PagePrincipaleAdmin_Resize;
+
             string[] BlueBox = { "Blue Box 1", "Blue Box 2", "Blue Box 3", "Blue Box 4" };
             comboBox1.Items.AddRange(BlueBox);
+
+            // curseur en forme de main sur le bouton Accueil
+            pictureBox2.Cursor = Cursors.Hand;
         }
 
         private void PagePrincipale_Load(object sender, EventArgs e)
@@ -47,7 +55,12 @@ namespace BlueTechAPP
 
         private void pictureBox2_Click(object sender, EventArgs e)
         {
-
+            // retour à la page d'accueil
+            if (this.Parent != null)
+            {
+                this.Parent.Controls.Clear();
+                this.Parent.Hide();
+            }
         }
         private string choixBlueBox;
         private void SelectBlueBox_Click(object sender, EventArgs e)
@@ -81,6 +94,15 @@ namespace BlueTechAPP
         private void panel1_Paint(object sender, PaintEventArgs e)
         {
 
+        }
+
+        private void PagePrincipaleAdmin_Resize(object sender, EventArgs e)
+        {
+            label1.Left = (this.Width - label1.Width) / 2;
+            pictureBox1.Left = this.Width - pictureBox1.Width - 20;
+            comboBox1.Left = (this.Width - comboBox1.Width) / 2;
+            SelectBlueBoxA.Left = (this.Width - SelectBlueBoxA.Width) / 2;
+            label2.Left = (this.Width - label2.Width) / 2;
         }
     }
 }
