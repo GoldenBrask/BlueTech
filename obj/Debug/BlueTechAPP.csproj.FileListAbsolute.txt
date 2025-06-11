@@ -1,0 +1,14 @@
+C:\Users\ilahbib\source\repos\BlueTechAPP\BlueTechAPP\bin\Debug\BlueTechAPP.exe.config
+C:\Users\ilahbib\source\repos\BlueTechAPP\BlueTechAPP\bin\Debug\BlueTechAPP.exe
+C:\Users\ilahbib\source\repos\BlueTechAPP\BlueTechAPP\bin\Debug\BlueTechAPP.pdb
+C:\Users\ilahbib\source\repos\BlueTechAPP\BlueTechAPP\obj\Debug\BlueTechAPP.csproj.AssemblyReference.cache
+C:\Users\ilahbib\source\repos\BlueTechAPP\BlueTechAPP\obj\Debug\BlueTechAPP.Form1.resources
+C:\Users\ilahbib\source\repos\BlueTechAPP\BlueTechAPP\obj\Debug\BlueTechAPP.Properties.Resources.resources
+C:\Users\ilahbib\source\repos\BlueTechAPP\BlueTechAPP\obj\Debug\BlueTechAPP.PagePrincipaleAdmin.resources
+C:\Users\ilahbib\source\repos\BlueTechAPP\BlueTechAPP\obj\Debug\BlueTechAPP.PagePrincipaleSuperAdmin.resources
+C:\Users\ilahbib\source\repos\BlueTechAPP\BlueTechAPP\obj\Debug\BlueTechAPP.UC_PageControle.resources
+C:\Users\ilahbib\source\repos\BlueTechAPP\BlueTechAPP\obj\Debug\BlueTechAPP.csproj.GenerateResource.cache
+C:\Users\ilahbib\source\repos\BlueTechAPP\BlueTechAPP\obj\Debug\BlueTechAPP.csproj.CoreCompileInputs.cache
+C:\Users\ilahbib\source\repos\BlueTechAPP\BlueTechAPP\obj\Debug\BlueTechAPP.exe
+C:\Users\ilahbib\source\repos\BlueTechAPP\BlueTechAPP\obj\Debug\BlueTechAPP.pdb
+C:\Users\ilahbib\source\repos\BlueTechAPP\BlueTechAPP\obj\Debug\BlueTechAPP.exe.config
