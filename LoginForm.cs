@@ -1,6 +1,6 @@
 using System;
-using System.Configuration;
-using MySql.Data.MySqlClient;
+
+using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
 
@@ -11,10 +11,18 @@ namespace BlueTechAPP
         private TextBox txtUsername;
         private TextBox txtPassword;
         private Button btnLogin;
+        private Dictionary<string, (string Password, string Role)> users;
+
 
         public LoginForm()
         {
             InitializeComponent();
+
+            users = new Dictionary<string, (string, string)>
+            {
+                { "superadmin", ("password", "super_admin") },
+                { "admin", ("password", "admin") }
+
         }
 
         private void InitializeComponent()
@@ -36,6 +44,7 @@ namespace BlueTechAPP
 
         private void BtnLogin_Click(object sender, EventArgs e)
         {
+
             string connectionString = ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
             try
             {
@@ -67,6 +76,16 @@ namespace BlueTechAPP
             catch (Exception ex)
             {
                 MessageBox.Show($"Erreur de connexion: {ex.Message}", "Erreur", MessageBoxButtons.OK, MessageBoxIcon.Error);
+
+            if (users.TryGetValue(txtUsername.Text.Trim(), out var data) && data.Password == txtPassword.Text)
+            {
+                Form1 main = new Form1(data.Role);
+                main.Show();
+                this.Hide();
+            }
+            else
+            {
+                MessageBox.Show("Identifiants invalides", "Erreur", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
     }
