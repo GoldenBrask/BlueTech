@@ -14,8 +14,13 @@ namespace BlueTechAPP
 {
     public partial class Form1 : Form
     {
-        public Form1()
+        private readonly string role;
+
+        public Form1() : this("admin") { }
+
+        public Form1(string role)
         {
+            this.role = role;
             InitializeComponent();
 
             this.WindowState = FormWindowState.Maximized;
@@ -25,14 +30,29 @@ namespace BlueTechAPP
             pictureBox1.SizeMode = PictureBoxSizeMode.Zoom;
             label1.Text = "Blue Tech !";
 
-
             label1.Font = new Font("Cooper Black", 50, FontStyle.Bold);
             label2.Font = new Font("Cooper Black", 30, FontStyle.Italic);
 
             SAdminBTN.Click += SAdminBTN_Click;
             AdminBTN.Click += AdminBTN_Click;
 
+            LoadHomePage();
 
+        }
+
+        private void LoadHomePage()
+        {
+            if (role == "super_admin")
+            {
+                SAdminBTN_Click(this, EventArgs.Empty);
+            }
+            else
+            {
+                AdminBTN_Click(this, EventArgs.Empty);
+            }
+            SAdminBTN.Visible = false;
+            AdminBTN.Visible = false;
+            label2.Visible = false;
         }
         private void Form1_Resize(object sender, EventArgs e)
         {
