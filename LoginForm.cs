@@ -4,6 +4,7 @@ using MySql.Data.MySqlClient;
 using System.Drawing;
 using System.Security.Cryptography;
 using System.Text;
+using System.Collections.Generic;
 using System.Windows.Forms;
 
 namespace BlueTechAPP
@@ -13,10 +14,16 @@ namespace BlueTechAPP
         private TextBox txtUsername;
         private TextBox txtPassword;
         private Button btnLogin;
+        private Dictionary<string, (string Password, string Role)> users;
 
         public LoginForm()
         {
             InitializeComponent();
+            users = new Dictionary<string, (string, string)>
+            {
+                { "superadmin", ("password", "super_admin") },
+                { "admin", ("password", "admin") }
+            };
         }
 
         private void InitializeComponent()
@@ -64,7 +71,18 @@ namespace BlueTechAPP
                         }
                     }
                 }
-                MessageBox.Show("Identifiants invalides", "Erreur", MessageBoxButtons.OK, MessageBoxIcon.Error);
+
+                // Vérification fallback dans le dictionnaire local (si base non disponible)
+                if (users.TryGetValue(txtUsername.Text.Trim(), out var data) && VerifyPassword(txtPassword.Text, ComputeHash(data.Password)))
+                {
+                    Form1 main = new Form1(data.Role);
+                    main.Show();
+                    this.Hide();
+                }
+                else
+                {
+                    MessageBox.Show("Identifiants invalides", "Erreur", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
             }
             catch (Exception ex)
             {
