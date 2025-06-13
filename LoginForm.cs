@@ -1,4 +1,5 @@
 using System;
+
 using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
@@ -12,14 +13,16 @@ namespace BlueTechAPP
         private Button btnLogin;
         private Dictionary<string, (string Password, string Role)> users;
 
+
         public LoginForm()
         {
             InitializeComponent();
+
             users = new Dictionary<string, (string, string)>
             {
                 { "superadmin", ("password", "super_admin") },
                 { "admin", ("password", "admin") }
-            };
+
         }
 
         private void InitializeComponent()
@@ -41,6 +44,39 @@ namespace BlueTechAPP
 
         private void BtnLogin_Click(object sender, EventArgs e)
         {
+
+            string connectionString = ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
+            try
+            {
+                using (var conn = new MySqlConnection(connectionString))
+                {
+                    conn.Open();
+                    using (var cmd = new MySqlCommand("SELECT password_hash, role FROM users WHERE username=@u", conn))
+                    {
+                        cmd.Parameters.AddWithValue("@u", txtUsername.Text.Trim());
+                        using (var reader = cmd.ExecuteReader())
+                        {
+                            if (reader.Read())
+                            {
+                                string pwd = reader.GetString(0);
+                                string role = reader.GetString(1);
+                                if (txtPassword.Text == pwd)
+                                {
+                                    Form1 main = new Form1(role);
+                                    main.Show();
+                                    this.Hide();
+                                    return;
+                                }
+                            }
+                        }
+                    }
+                }
+                MessageBox.Show("Identifiants invalides", "Erreur", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Erreur de connexion: {ex.Message}", "Erreur", MessageBoxButtons.OK, MessageBoxIcon.Error);
+
             if (users.TryGetValue(txtUsername.Text.Trim(), out var data) && data.Password == txtPassword.Text)
             {
                 Form1 main = new Form1(data.Role);
