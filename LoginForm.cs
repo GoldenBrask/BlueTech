@@ -1,7 +1,10 @@
 using System;
-
-using System.Collections.Generic;
+using System.Configuration;
+using MySql.Data.MySqlClient;
 using System.Drawing;
+using System.Security.Cryptography;
+using System.Text;
+using System.Collections.Generic;
 using System.Windows.Forms;
 
 namespace BlueTechAPP
@@ -13,16 +16,14 @@ namespace BlueTechAPP
         private Button btnLogin;
         private Dictionary<string, (string Password, string Role)> users;
 
-
         public LoginForm()
         {
             InitializeComponent();
-
             users = new Dictionary<string, (string, string)>
             {
                 { "superadmin", ("password", "super_admin") },
                 { "admin", ("password", "admin") }
-
+            };
         }
 
         private void InitializeComponent()
@@ -44,7 +45,6 @@ namespace BlueTechAPP
 
         private void BtnLogin_Click(object sender, EventArgs e)
         {
-
             string connectionString = ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
             try
             {
@@ -60,7 +60,7 @@ namespace BlueTechAPP
                             {
                                 string pwd = reader.GetString(0);
                                 string role = reader.GetString(1);
-                                if (txtPassword.Text == pwd)
+                                if (VerifyPassword(txtPassword.Text, pwd))
                                 {
                                     Form1 main = new Form1(role);
                                     main.Show();
@@ -71,21 +71,40 @@ namespace BlueTechAPP
                         }
                     }
                 }
-                MessageBox.Show("Identifiants invalides", "Erreur", MessageBoxButtons.OK, MessageBoxIcon.Error);
+
+                // Vérification fallback dans le dictionnaire local (si base non disponible)
+                if (users.TryGetValue(txtUsername.Text.Trim(), out var data) && VerifyPassword(txtPassword.Text, ComputeHash(data.Password)))
+                {
+                    Form1 main = new Form1(data.Role);
+                    main.Show();
+                    this.Hide();
+                }
+                else
+                {
+                    MessageBox.Show("Identifiants invalides", "Erreur", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
             }
             catch (Exception ex)
             {
                 MessageBox.Show($"Erreur de connexion: {ex.Message}", "Erreur", MessageBoxButtons.OK, MessageBoxIcon.Error);
-
-            if (users.TryGetValue(txtUsername.Text.Trim(), out var data) && data.Password == txtPassword.Text)
-            {
-                Form1 main = new Form1(data.Role);
-                main.Show();
-                this.Hide();
             }
-            else
+        }
+
+        private static bool VerifyPassword(string inputPassword, string storedHash)
+        {
+            string hash = ComputeHash(inputPassword);
+            return string.Equals(hash, storedHash, StringComparison.OrdinalIgnoreCase);
+        }
+
+        private static string ComputeHash(string input)
+        {
+            using (var sha = SHA256.Create())
             {
-                MessageBox.Show("Identifiants invalides", "Erreur", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                byte[] bytes = sha.ComputeHash(Encoding.UTF8.GetBytes(input));
+                var sb = new StringBuilder();
+                foreach (byte b in bytes)
+                    sb.Append(b.ToString("x2"));
+                return sb.ToString();
             }
         }
     }
